@@ -250,7 +250,9 @@ class Matcher:
 
 
         """
-        if not uf.is_continuous(col, self.X) and col not in self.exclude:
+        is_continuous = (col in self.X.columns) or ("Q('{}')".format(col) in self.X.columns)
+        if (not is_continuous) and (not (col in self.exclude)):
+        # if not uf.is_continuous(col, self.X) and col not in self.exclude:
             pval_before = round(stats.chi2_contingency(self.prep_prop_test(self.data,
                                                                            col))[1], 6)
             pval_after = round(stats.chi2_contingency(self.prep_prop_test(self.matched_data,
@@ -299,7 +301,9 @@ class Matcher:
         """
         test_results = []
         for col in self.matched_data.columns:
-            if uf.is_continuous(col, self.X) and col not in self.exclude:
+            is_continuous = (col in self.X.columns) or ("Q('{}')".format(col) in self.X.columns)
+            if is_continuous and (not (col in self.exclude)):
+            # if uf.is_continuous(col, self.X) and col not in self.exclude:
                 # organize data
                 trb, cob = self.test[col], self.control[col]
                 tra = self.matched_data[self.matched_data[self.yvar]==True][col]
@@ -405,7 +409,9 @@ class Matcher:
         '''
         test_results = []
         for col in self.matched_data.columns:
-            if not uf.is_continuous(col, self.X) and col not in self.exclude:
+            is_continuous = (col in self.X.columns) or ("Q('{}')".format(col) in self.X.columns)
+            if (not is_continuous) and (not (col in self.exclude)):
+            # if not uf.is_continuous(col, self.X) and col not in self.exclude:
                 dbefore = prep_plot(self.data, col, colname="before")
                 dafter = prep_plot(self.matched_data, col, colname="after")
                 df = dbefore.join(dafter)
