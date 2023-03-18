@@ -62,7 +62,7 @@ class Matcher:
         print('n majority:', len(self.data[self.data[yvar] == self.majority]))
         print('n minority:', len(self.data[self.data[yvar] == self.minority]))
 
-    def fit_scores(self, balance=True, nmodels=None, var_weights=None):
+    def fit_scores(self, balance=True, nmodels=None):
         """
         Fits logistic regression model(s) used for
         generating propensity scores
@@ -108,11 +108,6 @@ class Matcher:
                                sort=True)
                 y_samp, X_samp = patsy.dmatrices(self.formula, data=df, return_type='dataframe')
                 X_samp.drop(self.yvar, axis=1, errors='ignore', inplace=True)
-                if var_weights is not None:
-                    for column in X_samp.columns:
-                        for k, v in var_weights.items():
-                            if column.startswith(k):
-                                X_samp[column] = X_samp[column] * v
                 glm = GLM(y_samp, X_samp, family=sm.families.Binomial())
 
                 try:
