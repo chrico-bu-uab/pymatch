@@ -116,6 +116,7 @@ class Matcher:
                         for k, v in var_weights.items():
                             if i.startswith(k):
                                 vw.append(v)
+                vw = [vw] * len(X_samp)
                 glm = GLM(y_samp, X_samp, family=sm.families.Binomial(), var_weights=vw)
 
                 try:
