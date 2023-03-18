@@ -108,16 +108,12 @@ class Matcher:
                                sort=True)
                 y_samp, X_samp = patsy.dmatrices(self.formula, data=df, return_type='dataframe')
                 X_samp.drop(self.yvar, axis=1, errors='ignore', inplace=True)
-                if var_weights is None:
-                    vw = None
-                else:
-                    vw = []
+                if var_weights is not None:
                     for i in X_samp.columns:
                         for k, v in var_weights.items():
                             if i.startswith(k):
-                                vw.append(v)
-                vw = [vw] * len(X_samp)
-                glm = GLM(y_samp, X_samp, family=sm.families.Binomial(), var_weights=vw)
+                                X_samp[i] = X_samp[i] * v
+                glm = GLM(y_samp, X_samp, family=sm.families.Binomial())
 
                 try:
                     res = glm.fit()
@@ -132,7 +128,7 @@ class Matcher:
         else:
             # ignore any imbalance and fit one model
             print('Fitting 1 (Unbalanced) Model...')
-            glm = GLM(self.y, self.X, family=sm.families.Binomial(), var_weights=var_weights)
+            glm = GLM(self.y, self.X, family=sm.families.Binomial())
             res = glm.fit()
             self.model_accuracy.append(self._scores_to_accuracy(res, self.X, self.y))
             self.models.append(res)
