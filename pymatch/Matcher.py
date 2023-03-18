@@ -109,10 +109,10 @@ class Matcher:
                 y_samp, X_samp = patsy.dmatrices(self.formula, data=df, return_type='dataframe')
                 X_samp.drop(self.yvar, axis=1, errors='ignore', inplace=True)
                 if var_weights is not None:
-                    for i in X_samp.columns:
+                    for column in X_samp.columns:
                         for k, v in var_weights.items():
-                            if i.startswith(k):
-                                X_samp[i] = X_samp[i] * v
+                            if column.startswith(k):
+                                X_samp[column] = X_samp[column] * v
                 glm = GLM(y_samp, X_samp, family=sm.families.Binomial())
 
                 try:
