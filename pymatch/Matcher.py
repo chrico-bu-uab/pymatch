@@ -108,7 +108,15 @@ class Matcher:
                                sort=True)
                 y_samp, X_samp = patsy.dmatrices(self.formula, data=df, return_type='dataframe')
                 X_samp.drop(self.yvar, axis=1, errors='ignore', inplace=True)
-                glm = GLM(y_samp, X_samp, family=sm.families.Binomial(), var_weights=var_weights)
+                if var_weights is None:
+                    vw = None
+                else:
+                    vw = []
+                    for i in X_samp.columns:
+                        for k, v in var_weights.items():
+                            if i.startswith(k):
+                                vw.append(v)
+                glm = GLM(y_samp, X_samp, family=sm.families.Binomial(), var_weights=vw)
 
                 try:
                     res = glm.fit()
