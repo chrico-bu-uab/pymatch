@@ -62,7 +62,7 @@ class Matcher:
         print('n majority:', len(self.data[self.data[yvar] == self.majority]))
         print('n minority:', len(self.data[self.data[yvar] == self.minority]))
 
-    def fit_scores(self, balance=True, nmodels=None):
+    def fit_scores(self, balance=True, nmodels=None, var_weights=None):
         """
         Fits logistic regression model(s) used for
         generating propensity scores
@@ -108,7 +108,7 @@ class Matcher:
                                sort=True)
                 y_samp, X_samp = patsy.dmatrices(self.formula, data=df, return_type='dataframe')
                 X_samp.drop(self.yvar, axis=1, errors='ignore', inplace=True)
-                glm = GLM(y_samp, X_samp, family=sm.families.Binomial())
+                glm = GLM(y_samp, X_samp, family=sm.families.Binomial(), var_weights=var_weights)
 
                 try:
                     res = glm.fit()
@@ -123,7 +123,7 @@ class Matcher:
         else:
             # ignore any imbalance and fit one model
             print('Fitting 1 (Unbalanced) Model...')
-            glm = GLM(self.y, self.X, family=sm.families.Binomial())
+            glm = GLM(self.y, self.X, family=sm.families.Binomial(), var_weights=var_weights)
             res = glm.fit()
             self.model_accuracy.append(self._scores_to_accuracy(res, self.X, self.y))
             self.models.append(res)
