@@ -99,7 +99,7 @@ class Matcher:
             self.nmodels = nmodels
             i = 0
             errors = 0
-            while i < nmodels and (i > 0 or errors < 5):
+            while i < nmodels and (i > 0 or errors < 10):
                 uf.progress(i+1, nmodels, prestr="Fitting Models on Balanced Samples")
                 # sample from majority to create balance dataset
                 df = self.balanced_sample()
