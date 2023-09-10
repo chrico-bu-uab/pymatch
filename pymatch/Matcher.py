@@ -145,7 +145,7 @@ class Matcher:
             scores += m.predict(self.X[m.params.index])
         self.data['scores'] = scores/self.nmodels
 
-    def match(self, threshold=0.001, nmatches=1, method='min', max_rand=10, with_replacement=True):
+    def match(self, threshold=0.001, nmatches=1, method='min', max_rand=10, with_replacement=False):
         """
         Finds suitable match(es) for each record in the minority
         dataset, if one exists. Records are exlcuded from the final
