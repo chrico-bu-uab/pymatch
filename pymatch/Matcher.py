@@ -479,7 +479,7 @@ class Matcher:
                len(self.data[self.data[self.yvar] == self.minority])
 
     def tune_threshold(self, method, nmatches=1, rng=np.arange(0, .001, .0001),
-                       with_replacement=True):
+                       with_replacement=False):
         """
         Matches data over a grid to optimize threshold value and plots results.
 
