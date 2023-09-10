@@ -478,7 +478,8 @@ class Matcher:
         return len(self.matched_data[self.matched_data[self.yvar] == self.minority]) * 1.0 / \
                len(self.data[self.data[self.yvar] == self.minority])
 
-    def tune_threshold(self, method, nmatches=1, rng=np.arange(0, .001, .0001)):
+    def tune_threshold(self, method, nmatches=1, rng=np.arange(0, .001, .0001),
+                       with_replacement=True):
         """
         Matches data over a grid to optimize threshold value and plots results.
 
@@ -490,6 +491,13 @@ class Matcher:
             Max number of matches per record. See pymatch.match()
         rng: : list / np.array()
             Grid of threshold values
+        with_replacement : bool
+            True - matching is performed with replacement, in the
+            majority group. The same entry from the majority group can be
+            matched to multiple entries from the minority group
+            False - matching is performed without replacement, in
+            the majority group. All matches consist of unique entries.
+            Matching order is randomized.
 
         Returns
         -------
@@ -498,7 +506,8 @@ class Matcher:
         """
         results = []
         for i in rng:
-            self.match(method=method, nmatches=nmatches, threshold=i)
+            self.match(method=method, nmatches=nmatches, threshold=i,
+                       with_replacement=with_replacement)
             results.append(self.prop_retained())
         plt.plot(rng, results)
         plt.title("Proportion of Data retained for grid of threshold values")
